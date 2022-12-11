@@ -36,7 +36,7 @@ rootRouter.post("/", async (req, res) => {
   }
 });
 
-rootRouter.post("/63953777db8e2d0c622c2773/login", async (req, res) => {
+rootRouter.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const root = await RootModel.findOne({ email: email });

@@ -4,7 +4,7 @@ const medicoSchema = new Schema({
   name: { type: String, trim: true, required: true },
   email: { type: String, required: true },
   passwordHash: { type: String, required: true },
-  role: { type: String, enum: ["MED", "PAC", "AGS"] },
+  role: { type: String },
   cpf: { type: Number, required: true },
   rg: { type: Number, required: true },
   posto: [{ type: Types.ObjectId, ref: "Posto" }],
