@@ -51,7 +51,11 @@ const pacienteSchema = new Schema({
     required: true,
     uppercase: true,
   },
-  // dataNascimento: {},
+  dataNascimento: {
+    type: String,
+    required: true,
+    match: /(\d{2})[-.\/](\d{2})[-.\/](\d{4})/gm,
+  },
   cor: {
     type: String,
     trim: true,
