@@ -70,6 +70,14 @@ AGSRouter.post(
         return res.status(400).json({ msg: "Senha não atende os requisitos!" });
       }
 
+      if (
+        !req.body.dataNascimento.match(/(\d{2})[-.\/](\d{2})[-.\/](\d{4})/gm)
+      ) {
+        return res
+          .status(400)
+          .json({ msg: "Insira uma data válida: DD/MM/AAAA" });
+      }
+
       const salt = await bcrypt.genSalt(Number(process.env.SALT_ROUNDS));
       const hashedPassword = await bcrypt.hash(password, salt);
       const create = await Model.create({
