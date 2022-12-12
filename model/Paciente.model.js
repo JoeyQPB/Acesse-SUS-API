@@ -137,11 +137,16 @@ const pacienteSchema = new Schema({
   },
   createdBy: {
     type: String,
+    uppercase: true,
   },
   updateBy: {
     type: String,
+    uppercase: true,
   },
-  consultas: [],
+  consulta: {
+    type: Types.ObjectId,
+    ref: "Consulta",
+  },
 });
 
 export const PacienteModel = model("Paciente", pacienteSchema);
