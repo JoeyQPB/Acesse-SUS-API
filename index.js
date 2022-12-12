@@ -4,6 +4,8 @@ import { DBconnect } from "./config/db.config.js";
 
 import { rootRouter } from "./routes/root.routes.js";
 import { AGSRouter } from "./routes/AGS.routes.js";
+import { PACRouter } from "./routes/Pacientes.routes.js";
+import { MEDrouter } from "./routes/medico.routes.js";
 
 import { recSenhaRouter } from "./routes/recSenha.routes.js";
 
@@ -23,6 +25,10 @@ app.use(`/API/${API_ROOT}/Root`, rootRouter);
 app.use(`/API/${API_VERSION}`, recSenhaRouter);
 
 app.use(`/API/${API_VERSION}/AGS`, AGSRouter);
+
+app.use(`/API/${API_VERSION}/PAC`, PACRouter);
+
+app.use(`/API/${API_VERSION}/MED`, MEDrouter);
 
 app.listen(Number(process.env.DOOR), () => {
   console.log(`Server up and running at DOOR: ${process.env.DOOR}`);
