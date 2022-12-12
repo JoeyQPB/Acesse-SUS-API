@@ -3,6 +3,10 @@ import { GenerateToken } from "../config/jwt.config.js";
 import { RootModel } from "../model/root.model.js";
 import bcrypt from "bcrypt";
 import * as dotenv from "dotenv";
+import isAuth from "../middlewares/isAuth.js";
+import attachCurrentUser from "../middlewares/attachCurrentUser.js";
+import { isROOT } from "../middlewares/isROOT.js";
+import { AgenteDeSaudeModel } from "../model/AgenteDeSaude.model.js";
 
 import crypto from "crypto";
 // const crypto = require("crypto");
@@ -154,5 +158,105 @@ rootRouter.post("/login", async (req, res) => {
 //     return res.status(500).json(err);
 //   }
 // });
+
+rootRouter.post(
+  "/cadastrar_AGS",
+  isAuth,
+  attachCurrentUser,
+  isROOT,
+  async (req, res) => {
+    try {
+      const { password } = req.body;
+
+      if (
+        !password ||
+        !password.match(
+          /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/gm
+        )
+      ) {
+        return res.status(400).json({ msg: "Senha não atende os requisitos!" });
+      }
+
+      const salt = await bcrypt.genSalt(Number(process.env.SALT_ROUNDS));
+      const hashedPassword = await bcrypt.hash(password, salt);
+      const createdAGS = await AgenteDeSaudeModel.create({
+        ...req.body,
+        passwordHash: hashedPassword,
+        role: "AGS",
+      });
+
+      delete createdAGS._doc.passwordHash;
+      return res.status(201).json(createdAGS);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  }
+);
+
+rootRouter.get(
+  "/all_AGS",
+  isAuth,
+  attachCurrentUser,
+  isROOT,
+  async (req, res) => {
+    try {
+      const allAGS = await AgenteDeSaudeModel.find({}, { passwordHash: 0 });
+
+      return res.status(200).json(allAGS);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  }
+);
+
+rootRouter.patch(
+  "/editar_AGS/:id",
+  isAuth,
+  attachCurrentUser,
+  isROOT,
+  async (req, res) => {
+    try {
+      delete req.body._id;
+      const oldAGS = await AgenteDeSaudeModel.findOne(
+        { _id: req.params.id },
+        { passwordHash: 0 }
+      );
+
+      const newAGS = await AgenteDeSaudeModel.findOneAndUpdate(
+        { _id: req.params.id },
+        { ...req.body },
+        { new: true, runValidators: true }
+      );
+
+      delete newAGS._doc.passwordHash;
+
+      return res.status(200).json(newAGS);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  }
+);
+
+rootRouter.delete(
+  "/delete/:id",
+  isAuth,
+  attachCurrentUser,
+  isROOT,
+  async (req, res) => {
+    try {
+      const deletedAGS = await AgenteDeSaudeModel.deleteOne({
+        _id: req.params.id,
+      });
+
+      return res.status(200).json(deletedAGS);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  }
+);
 
 export { rootRouter };
