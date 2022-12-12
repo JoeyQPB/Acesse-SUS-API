@@ -7,6 +7,8 @@ import { AGSRouter } from "./routes/AGS.routes.js";
 import { PACRouter } from "./routes/Pacientes.routes.js";
 import { MEDrouter } from "./routes/medico.routes.js";
 
+import { uploadImgRouter } from "./routes/uplouadImage.routes.js";
+
 import { recSenhaRouter } from "./routes/recSenha.routes.js";
 
 dotenv.config();
@@ -29,6 +31,8 @@ app.use(`/API/${API_VERSION}/AGS`, AGSRouter);
 app.use(`/API/${API_VERSION}/PAC`, PACRouter);
 
 app.use(`/API/${API_VERSION}/MED`, MEDrouter);
+
+app.use(`/API/${API_VERSION}/upload_img`, uploadImgRouter);
 
 app.listen(Number(process.env.DOOR), () => {
   console.log(`Server up and running at DOOR: ${process.env.DOOR}`);
