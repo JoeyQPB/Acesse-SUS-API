@@ -5,6 +5,7 @@ const medicoSchema = new Schema({
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   email: {
     type: String,
@@ -16,28 +17,27 @@ const medicoSchema = new Schema({
     type: String,
     required: true,
   },
-  role: { type: String },
+  role: { type: String, uppercase: true },
   cpf: {
-    type: Number,
+    type: String,
     required: true,
   },
   rg: {
-    type: Number,
+    type: String,
     required: true,
   },
-  posto: [
-    {
-      type: Types.ObjectId,
-      ref: "Posto",
-    },
-  ],
+  posto: {
+    type: String,
+    ref: "Posto",
+    uppercase: true,
+  },
   foto: {
     type: String,
     default:
       "https://res.cloudinary.com/dqeehrnvz/image/upload/v1670727739/Acesse%20Sus%20Pasta/default_img_ml07es.png",
   },
   CRM: {
-    type: Number,
+    type: String,
     required: true,
   },
   UF: {
@@ -79,6 +79,7 @@ const medicoSchema = new Schema({
     type: String,
     required: true,
     trim: true,
+    uppercase: true,
   },
   consultas: [
     {
@@ -86,16 +87,11 @@ const medicoSchema = new Schema({
       ref: "Consulta",
     },
   ],
-  posto: [
-    {
-      type: Types.ObjectId,
-      ref: "Posto",
-    },
-  ],
-  foto: {
+  createdBy: {
     type: String,
-    default:
-      "https://res.cloudinary.com/dqeehrnvz/image/upload/v1670727739/Acesse%20Sus%20Pasta/default_img_ml07es.png",
+  },
+  updateBy: {
+    type: String,
   },
 });
 

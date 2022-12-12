@@ -1,10 +1,11 @@
-import { Schema, model, Types } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const agenteDeSaudeSchema = new Schema({
   name: {
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   email: {
     type: String,
@@ -21,16 +22,19 @@ const agenteDeSaudeSchema = new Schema({
     enum: ["MED", "PAC", "AGS"],
   },
   cpf: {
-    type: Number,
+    type: String,
     required: true,
+    unique: true,
   },
   rg: {
-    type: Number,
+    type: String,
     required: true,
+    unique: true,
   },
   posto: {
-    type: Types.ObjectId,
-    ref: "Posto",
+    type: String,
+    required: true,
+    uppercase: true,
   },
   foto: {
     type: String,

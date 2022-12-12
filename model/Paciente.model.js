@@ -5,6 +5,7 @@ const pacienteSchema = new Schema({
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   email: {
     type: String,
@@ -16,18 +17,18 @@ const pacienteSchema = new Schema({
     type: String,
     required: true,
   },
-  role: { type: String },
+  role: { type: String, uppercase: true },
   cpf: {
-    type: Number,
+    type: String,
     required: true,
   },
   rg: {
-    type: Number,
+    type: String,
     required: true,
   },
   posto: {
-    type: Types.ObjectId,
-    ref: "Posto",
+    type: String,
+    uppercase: true,
   },
   foto: {
     type: String,
@@ -38,90 +39,107 @@ const pacienteSchema = new Schema({
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   suscard: {
-    type: Number,
+    type: String,
     required: true,
   },
   nacionalidade: {
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   // dataNascimento: {},
   cor: {
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   sexo: {
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   nomeDaMae: {
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   tel: {
     type: Number,
     trim: true,
     required: true,
   },
-  createdBy: {
-    type: Types.ObjectId,
-    ref: "Agente-De-Saude",
-  },
   pulmaoDoenca: {
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
-  fulmante: {
+  fumante: {
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   usaAlcool: {
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   usaDrogas: {
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   hipertenso: {
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   diabetes: {
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   avcderrame: {
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   infarto: {
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   cardioDoenca: {
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
   },
   problemaRins: {
     type: String,
     trim: true,
     required: true,
+    uppercase: true,
+  },
+  createdBy: {
+    type: String,
+  },
+  updateBy: {
+    type: String,
   },
   consultas: [],
 });
