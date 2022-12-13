@@ -22,12 +22,12 @@ const agenteDeSaudeSchema = new Schema({
     enum: ["MED", "PAC", "AGS"],
   },
   cpf: {
-    type: String,
+    type: Number,
     required: true,
     unique: true,
   },
   rg: {
-    type: String,
+    type: Number,
     required: true,
     unique: true,
   },
