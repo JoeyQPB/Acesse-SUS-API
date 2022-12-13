@@ -74,17 +74,17 @@ rootRouter.post(
         return res.status(400).json({ msg: "Senha não atende os requisitos!" });
       }
 
-      // if (!cpf || !cpf.match(/[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2}/gm)) {
-      //   return res.status(400).json({
-      //     msg: "CPF não atende os requisitos! (Digite apenas números)",
-      //   });
-      // }
+      if (!cpf || !cpf.match(/[0-9]{3}[0-9]{3}[0-9]{3}[0-9]{2}/gm)) {
+        return res.status(400).json({
+          msg: "CPF não atende os requisitos! (Digite apenas números)",
+        });
+      }
 
-      // if (!rg || !rg.match(/[0-9]{2}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2}/gm)) {
-      //   return res.status(400).json({
-      //     msg: "RG não atende os requisitos! (Digite apenas números)",
-      //   });
-      // }
+      if (!rg || !rg.match(/[0-9]{2}[0-9]{3}[0-9]{3}[0-9]{2}/gm)) {
+        return res.status(400).json({
+          msg: "RG não atende os requisitos! (Digite apenas números)",
+        });
+      }
 
       const salt = await bcrypt.genSalt(Number(process.env.SALT_ROUNDS));
       const hashedPassword = await bcrypt.hash(password, salt);
