@@ -71,10 +71,7 @@ MEDrouter.post(
   async (req, res) => {
     const loggedInUser = req.currentUser;
     try {
-      const medico = await MedicoModel.findOne(
-        { _id: loggedInUser._id },
-        { passwordHash: 0 }
-      );
+      const medico = loggedInUser;
 
       const paciente = await PacienteModel.findOne(
         { _id: req.params.id },
