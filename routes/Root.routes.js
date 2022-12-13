@@ -8,11 +8,6 @@ import attachCurrentUser from "../middlewares/attachCurrentUser.js";
 import { isROOT } from "../middlewares/isROOT.js";
 import { AgenteDeSaudeModel } from "../model/AgenteDeSaude.model.js";
 
-import crypto from "crypto";
-// const crypto = require("crypto");
-
-import { transport } from "../modules/mailer.js";
-
 const rootRouter = express.Router();
 dotenv.config();
 
@@ -20,12 +15,7 @@ rootRouter.post("/", async (req, res) => {
   try {
     const { password } = req.body;
 
-    if (
-      !password ||
-      !password.match(
-        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/gm
-      )
-    ) {
+    if (!password) {
       return res.status(400).json({ msg: "Senha não atende os requisitos!" });
     }
 
@@ -78,16 +68,23 @@ rootRouter.post(
   isROOT,
   async (req, res) => {
     try {
-      const { password } = req.body;
+      const { password, cpf, rg } = req.body;
 
-      if (
-        !password ||
-        !password.match(
-          /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/gm
-        )
-      ) {
+      if (!password) {
         return res.status(400).json({ msg: "Senha não atende os requisitos!" });
       }
+
+      // if (!cpf || !cpf.match(/[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2}/gm)) {
+      //   return res.status(400).json({
+      //     msg: "CPF não atende os requisitos! (Digite apenas números)",
+      //   });
+      // }
+
+      // if (!rg || !rg.match(/[0-9]{2}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2}/gm)) {
+      //   return res.status(400).json({
+      //     msg: "RG não atende os requisitos! (Digite apenas números)",
+      //   });
+      // }
 
       const salt = await bcrypt.genSalt(Number(process.env.SALT_ROUNDS));
       const hashedPassword = await bcrypt.hash(password, salt);

@@ -61,12 +61,7 @@ AGSRouter.post(
 
       const { password } = req.body;
 
-      if (
-        !password ||
-        !password.match(
-          /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/gm
-        )
-      ) {
+      if (!password) {
         return res.status(400).json({ msg: "Senha não atende os requisitos!" });
       }
 
