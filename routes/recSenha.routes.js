@@ -32,7 +32,7 @@ recSenhaRouter.post("/esqueci_senha", async (req, res) => {
       return res.status(404).json({ msg: "Usuário não encontrado!" });
     }
 
-    const token = crypto.randomBytes(20).toString("hex");
+    const token = crypto.randomBytes(12).toString("hex");
 
     //rashearsenha
     const salt = await bcrypt.genSalt(Number(process.env.SALT_ROUNDS));

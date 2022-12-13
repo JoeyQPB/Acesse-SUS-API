@@ -93,6 +93,10 @@ const medicoSchema = new Schema({
   updateBy: {
     type: String,
   },
+  dataNascimento: {
+    type: String,
+    required: true,
+  },
 });
 
 export const MedicoModel = model("Medico", medicoSchema);

@@ -59,10 +59,30 @@ AGSRouter.post(
       if (!req.body.role)
         return res.status(401).json({ msg: `Informe a ROLE` });
 
-      const { password } = req.body;
+      const { password, cpf, rg, CRM } = req.body;
 
       if (!password) {
         return res.status(400).json({ msg: "Senha não atende os requisitos!" });
+      }
+
+      if (!cpf || !cpf.match(/[0-9]{11}/gm)) {
+        return res.status(400).json({
+          msg: "CPF não atende os requisitos! (Digite apenas números)",
+        });
+      }
+
+      if (!rg || !rg.match(/[0-9]{9}/gm)) {
+        return res.status(400).json({
+          msg: "RG não atende os requisitos! (Digite apenas números)",
+        });
+      }
+
+      if (req.body.role === "MED") {
+        if (!CRM || !CRM.match(/[0-9]{6}/gm)) {
+          return res.status(400).json({
+            msg: "CRM não atende os requisitos! (Digite apenas números)",
+          });
+        }
       }
 
       if (
