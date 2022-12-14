@@ -18,14 +18,6 @@ const rootSchema = new Schema({
     type: String,
     enum: ["ROOT", "MED", "PAC", "AGS"],
   },
-  passwordResetToken: {
-    type: String,
-    select: false, // n vem na req
-  },
-  passwordResetExpires: {
-    type: Date,
-    select: false,
-  },
 });
 
 export const RootModel = model("Root", rootSchema);

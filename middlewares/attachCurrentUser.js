@@ -4,9 +4,9 @@ import { PacienteModel } from "../model/Paciente.model.js";
 import { RootModel } from "../model/root.model.js";
 
 export default async function AttachCurrentUser(req, res, next) {
-  const userData = req.auth;
-
   try {
+    const userData = req.auth;
+
     if (userData.role === "AGS") {
       const user = await AgenteDeSaudeModel.findOne(
         { _id: userData._id },
@@ -18,6 +18,7 @@ export default async function AttachCurrentUser(req, res, next) {
       }
 
       req.currentUser = user;
+      next();
     }
 
     if (userData.role === "MED") {
@@ -31,6 +32,7 @@ export default async function AttachCurrentUser(req, res, next) {
       }
 
       req.currentUser = user;
+      next();
     }
 
     if (userData.role === "PAC") {
@@ -44,6 +46,7 @@ export default async function AttachCurrentUser(req, res, next) {
       }
 
       req.currentUser = user;
+      next();
     }
 
     if (userData.role === "ROOT") {
@@ -59,9 +62,8 @@ export default async function AttachCurrentUser(req, res, next) {
       }
 
       req.currentUser = user;
+      next();
     }
-
-    next();
   } catch (err) {
     console.log(err);
     return res.status(404).json(err);

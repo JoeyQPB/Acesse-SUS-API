@@ -10,11 +10,10 @@ import hbs from "nodemailer-express-handlebars";
 // const { host, port, user, pass } = require("../config/mail.json");
 import { mail } from "../config/mail.config.js";
 
-const { host, port, user, pass } = mail;
+const { service, user, pass } = mail;
 
 const transport = nodemailer.createTransport({
-  host,
-  port,
+  service,
   auth: { user, pass },
 });
 
