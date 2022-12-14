@@ -1,4 +1,4 @@
-export async function isMED(req, res, next) {
+export function isMED(req, res, next) {
   try {
     if (req.currentUser.role !== "MED") {
       return res.status(401).json({ msg: "User Unauthorized" });

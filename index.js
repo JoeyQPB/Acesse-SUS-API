@@ -11,18 +11,20 @@ import { uploadImgRouter } from "./routes/uplouadImage.routes.js";
 
 import { recSenhaRouter } from "./routes/recSenha.routes.js";
 
+import cors from "cors";
+
 dotenv.config();
 DBconnect();
 
 const app = express();
 
+app.use(cors());
+
 app.use(express.json());
 
 const API_VERSION = "1.0";
 
-const API_ROOT = process.env.API_ROOT;
-
-app.use(`/API/${API_ROOT}/Root`, rootRouter);
+app.use(`/API/${API_VERSION}/Root`, rootRouter);
 
 app.use(`/API/${API_VERSION}`, recSenhaRouter);
 

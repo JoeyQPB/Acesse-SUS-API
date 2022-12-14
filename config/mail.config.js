@@ -1,6 +1,9 @@
+import * as dotenv from "dotenv";
+
+dotenv.config();
+
 export const mail = {
-  host: "smtp.mailtrap.io",
-  port: 2525,
-  user: "dde4848b47a6dd",
-  pass: "6f56594577cd79",
+  service: "hotmail",
+  user: process.env.EMAIL_ADDRESS,
+  pass: process.env.EMAIL_PASSWORD,
 };

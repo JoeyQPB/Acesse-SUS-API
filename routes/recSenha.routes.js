@@ -14,53 +14,56 @@ import { transport } from "../modules/mailer.js";
 const recSenhaRouter = express.Router();
 dotenv.config();
 
-recSenhaRouter.post("/esqueci_senha", async (req, res) => {
-  const { email } = req.body;
-
+recSenhaRouter.post("/esqueci_senha", async (req, res, next) => {
   try {
-    let user;
-    let model;
-    user = await AgenteDeSaudeModel.findOne({ email: email });
-    model = AgenteDeSaudeModel;
-    if (!user) {
-      user = await MedicoModel.findOne({ email: email });
-      model = MedicoModel;
-    } else if (!user) {
-      user = await PacienteModel.findOne({ email: email });
-      model = PacienteModel;
-    } else if (!user) {
-      return res.status(404).json({ msg: "Usuário não encontrado!" });
-    }
+    const { email } = req.body;
 
     const token = crypto.randomBytes(12).toString("hex");
 
-    //rashearsenha
     const salt = await bcrypt.genSalt(Number(process.env.SALT_ROUNDS));
     const tokenHash = await bcrypt.hash(token, salt);
 
-    //alocar senha rasheada
-    await model.findByIdAndUpdate(user.id, {
-      $set: {
-        passwordHash: tokenHash,
-      },
-    });
+    if (req.body.role === "AGS") {
+      await AgenteDeSaudeModel.findOneAndUpdate(
+        { email: email },
+        {
+          passwordHash: tokenHash,
+        }
+      );
+    }
+
+    if (req.body.role === "MED") {
+      await MedicoModel.findOneAndUpdate(
+        { email: email },
+        {
+          passwordHash: tokenHash,
+        }
+      );
+    }
+
+    if (req.body.role === "PAC") {
+      await PacienteModel.findOneAndUpdate(
+        { email: email },
+        {
+          passwordHash: tokenHash,
+        }
+      );
+    }
 
     transport.sendMail(
       {
         to: email,
-        from: `acessesus@gmail.com`,
-        subject: "Acesse Sus Recuperação de Senha",
+        from: `Projeto Acesse SUS ${process.env.EMAIL_ADDRESS}`,
+        subject: "Acesse Sus Nova Senha",
         text: `Sua nova senha é: ${token}`,
-        html: `<p> Sua nova senha é: ${token} </p>`,
+        html: `<b> Sua nova senha é: ${token} </b>`,
       },
       (err) => {
         if (err) {
           return res
             .status(400)
-            .send({ error: "Não consigo enviar o email para recuperação" });
+            .send({ error: "Não consigo gerar nova senha :(" });
         }
-
-        return res.status(200).json({ msg: "OK!" });
       }
     );
 

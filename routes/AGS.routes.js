@@ -29,7 +29,7 @@ AGSRouter.post("/login", async (req, res) => {
     const token = GenerateToken(AGS);
 
     return res.status(200).json({
-      root: {
+      user: {
         name: AGS.name,
         email: AGS.email,
         _id: AGS._id,
@@ -125,22 +125,28 @@ AGSRouter.get("/all", isAuth, attachCurrentUser, isAGS, async (req, res) => {
   }
 });
 
-AGSRouter.get("/:id", isAuth, attachCurrentUser, isAGS, async (req, res) => {
-  let Model;
-  if (req.body.role === "MED") Model = MedicoModel;
-  if (req.body.role === "PAC") Model = PacienteModel;
-  try {
-    const user = await Model.findOne(
-      { _id: req.params.id },
-      { passwordHash: 0 }
-    );
+AGSRouter.get(
+  "/buscar/:id",
+  isAuth,
+  attachCurrentUser,
+  isAGS,
+  async (req, res) => {
+    try {
+      let Model;
+      if (req.body.role === "MED") Model = MedicoModel;
+      if (req.body.role === "PAC") Model = PacienteModel;
+      const user = await Model.findOne(
+        { _id: req.params.id },
+        { passwordHash: 0 }
+      );
 
-    return res.status(200).json(user);
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json(err);
+      return res.status(200).json(user);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
   }
-});
+);
 
 AGSRouter.patch(
   "/edit/:id",
@@ -198,5 +204,16 @@ AGSRouter.delete(
     }
   }
 );
+
+AGSRouter.get("/profile", isAuth, attachCurrentUser, isAGS, (req, res) => {
+  try {
+    const loggedInUser = req.currentUser;
+
+    return res.status(200).json(loggedInUser);
+  } catch (err) {
+    console.log(err);
+    return res.status(err);
+  }
+});
 
 export { AGSRouter };
