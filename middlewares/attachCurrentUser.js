@@ -39,7 +39,7 @@ export default async function AttachCurrentUser(req, res, next) {
       const user = await PacienteModel.findOne(
         { _id: userData._id },
         { passwordHash: 0 }
-      );
+      ).populate("consulta");
 
       if (!user) {
         return res.status(404).json({ msg: "Paciente não encontrado" });
