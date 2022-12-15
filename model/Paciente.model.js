@@ -148,8 +148,7 @@ const pacienteSchema = new Schema({
     uppercase: true,
   },
   consulta: {
-    type: Types.ObjectId,
-    ref: "Consulta",
+    type: String,
   },
 });
 

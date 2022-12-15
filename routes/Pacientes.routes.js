@@ -19,7 +19,7 @@ PACRouter.post("/login", async (req, res) => {
       return res.status(404).json({ msg: "Email ou Senha inválidos" });
     }
 
-    const token = GenerateToken(Paciente);
+    const token = GenerateToken(paciente);
 
     return res.status(200).json({
       user: {

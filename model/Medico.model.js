@@ -83,8 +83,7 @@ const medicoSchema = new Schema({
   },
   consultas: [
     {
-      type: Types.ObjectId,
-      ref: "Consulta",
+      type: String,
     },
   ],
   createdBy: {

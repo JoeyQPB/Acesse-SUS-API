@@ -121,10 +121,12 @@ MEDrouter.post(
         $push: { updatedAt: new Date(Date.now()), historico: oldconsulta },
       });
 
+      const consultaID = String(consulta._id);
+
       await PacienteModel.findOneAndUpdate(
         { _id: paciente._id },
         {
-          consulta: consulta._id,
+          consulta: consultaID,
         },
         { new: true }
       );
@@ -132,7 +134,7 @@ MEDrouter.post(
       await MedicoModel.findOneAndUpdate(
         { _id: medico._id },
         {
-          $push: { consultas: consulta._id },
+          $push: { consultas: consultaID },
         },
         { new: true }
       );
