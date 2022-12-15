@@ -44,18 +44,19 @@ MEDrouter.get("/perfil", isAuth, attachCurrentUser, isMED, (req, res) => {
 });
 
 MEDrouter.get(
-  "/info_paciente",
+  "/info_paciente/:cpf",
   isAuth,
   attachCurrentUser,
   isMED,
   async (req, res) => {
     try {
+      console.log(req.body);
       const paciente = await PacienteModel.findOne(
-        { cpf: req.body.cpf },
+        { cpf: req.params.cpf },
         { passwordHash: 0 }
       );
 
-      return res.status(200).json(paciente);
+      return res.status(200).json(paciente.consulta);
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
