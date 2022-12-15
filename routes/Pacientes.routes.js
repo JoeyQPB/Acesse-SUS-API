@@ -36,7 +36,7 @@ PACRouter.post("/login", async (req, res) => {
   }
 });
 
-PACRouter.get("/info", isAuth, attachCurrentUser, isPAC, (req, res) => {
+PACRouter.get("/perfil", isAuth, attachCurrentUser, isPAC, (req, res) => {
   const loggedInUser = req.currentUser;
   return res.status(200).json(loggedInUser);
 });

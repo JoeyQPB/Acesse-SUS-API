@@ -69,8 +69,8 @@ MEDrouter.post(
   attachCurrentUser,
   isMED,
   async (req, res) => {
-    const loggedInUser = req.currentUser;
     try {
+      const loggedInUser = req.currentUser;
       const medico = loggedInUser;
 
       const paciente = await PacienteModel.findOne(

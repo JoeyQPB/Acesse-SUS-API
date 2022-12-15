@@ -9,11 +9,6 @@ import { isAGS } from "../middlewares/isAGS.js";
 import { PacienteModel } from "../model/Paciente.model.js";
 import { MedicoModel } from "../model/Medico.model.js";
 
-import crypto from "crypto";
-// const crypto = require("crypto");
-
-import { transport } from "../modules/mailer.js";
-
 const AGSRouter = express.Router();
 dotenv.config();
 
@@ -49,9 +44,8 @@ AGSRouter.post(
   attachCurrentUser,
   isAGS,
   async (req, res) => {
-    const loggedInUser = req.currentUser;
-
     try {
+      const loggedInUser = req.currentUser;
       let Model;
       if (req.body.role === "MED") Model = MedicoModel;
       if (req.body.role === "PAC") Model = PacienteModel;
@@ -112,10 +106,10 @@ AGSRouter.post(
 );
 
 AGSRouter.get("/all", isAuth, attachCurrentUser, isAGS, async (req, res) => {
-  let Model;
-  if (req.body.role === "MED") Model = MedicoModel;
-  if (req.body.role === "PAC") Model = PacienteModel;
   try {
+    let Model;
+    if (req.body.role === "MED") Model = MedicoModel;
+    if (req.body.role === "PAC") Model = PacienteModel;
     const all = await Model.find({}, { passwordHash: 0 });
 
     return res.status(200).json(all);
@@ -154,10 +148,10 @@ AGSRouter.patch(
   attachCurrentUser,
   isAGS,
   async (req, res) => {
-    let Model;
-    if (req.body.role === "MED") Model = MedicoModel;
-    if (req.body.role === "PAC") Model = PacienteModel;
     try {
+      let Model;
+      if (req.body.role === "MED") Model = MedicoModel;
+      if (req.body.role === "PAC") Model = PacienteModel;
       delete req.body._id;
       const oldUser = await Model.findOne(
         { _id: req.params.id },
@@ -188,11 +182,11 @@ AGSRouter.delete(
   attachCurrentUser,
   isAGS,
   async (req, res) => {
-    let Model;
-    if (req.body.role === "MED") Model = MedicoModel;
-    if (req.body.role === "PAC") Model = PacienteModel;
-
     try {
+      let Model;
+      if (req.body.role === "MED") Model = MedicoModel;
+      if (req.body.role === "PAC") Model = PacienteModel;
+
       const deletedUser = await Model.deleteOne({
         _id: req.params.id,
       });
@@ -206,14 +200,8 @@ AGSRouter.delete(
 );
 
 AGSRouter.get("/profile", isAuth, attachCurrentUser, isAGS, (req, res) => {
-  try {
-    const loggedInUser = req.currentUser;
-
-    return res.status(200).json(loggedInUser);
-  } catch (err) {
-    console.log(err);
-    return res.status(err);
-  }
+  const loggedInUser = req.currentUser;
+  return res.status(200).json(loggedInUser);
 });
 
 export { AGSRouter };
