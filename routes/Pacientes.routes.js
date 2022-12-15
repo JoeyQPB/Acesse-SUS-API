@@ -22,7 +22,7 @@ PACRouter.post("/login", async (req, res) => {
     const token = GenerateToken(Paciente);
 
     return res.status(200).json({
-      root: {
+      user: {
         name: paciente.name,
         email: paciente.email,
         _id: paciente._id,

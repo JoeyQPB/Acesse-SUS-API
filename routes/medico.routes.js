@@ -24,7 +24,7 @@ MEDrouter.post("/login", async (req, res) => {
     const token = GenerateToken(medico);
 
     return res.status(200).json({
-      root: {
+      user: {
         name: medico.name,
         email: medico.email,
         _id: medico._id,
