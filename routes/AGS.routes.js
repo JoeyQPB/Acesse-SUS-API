@@ -45,10 +45,13 @@ AGSRouter.post(
   isAGS,
   async (req, res) => {
     try {
+      console.log(req.body);
       const loggedInUser = req.currentUser;
       let Model;
       if (req.body.role === "MED") Model = MedicoModel;
       if (req.body.role === "PAC") Model = PacienteModel;
+
+      console.log(Model);
 
       if (!req.body.role)
         return res.status(401).json({ msg: `Informe a ROLE` });
@@ -105,13 +108,9 @@ AGSRouter.post(
   }
 );
 
-AGSRouter.get("/all", isAuth, attachCurrentUser, isAGS, async (req, res) => {
+AGSRouter.get("/allmed", isAuth, attachCurrentUser, isAGS, async (req, res) => {
   try {
-    let Model;
-    if (req.body.role === "MED") Model = MedicoModel;
-    if (req.body.role === "PAC") Model = PacienteModel;
-    const all = await Model.find({}, { passwordHash: 0 });
-
+    const all = await MedicoModel.find({}, { passwordHash: 0 });
     return res.status(200).json(all);
   } catch (err) {
     console.log(err);
@@ -119,22 +118,40 @@ AGSRouter.get("/all", isAuth, attachCurrentUser, isAGS, async (req, res) => {
   }
 });
 
-AGSRouter.get(
-  "/buscar/:id",
+AGSRouter.get("/allpac", isAuth, attachCurrentUser, isAGS, async (req, res) => {
+  try {
+    const all = await PacienteModel.find({}, { passwordHash: 0 });
+    return res.status(200).json(all);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+});
+
+AGSRouter.patch(
+  "/editMED/:id",
   isAuth,
   attachCurrentUser,
   isAGS,
   async (req, res) => {
     try {
-      let Model;
-      if (req.body.role === "MED") Model = MedicoModel;
-      if (req.body.role === "PAC") Model = PacienteModel;
-      const user = await Model.findOne(
+      delete req.body._id;
+      const oldUser = await MedicoModel.findOne(
         { _id: req.params.id },
-        { passwordHash: 0 }
+        { passwordHash: 0 },
+        { createdBy: 0 },
+        { consultas: 0 }
       );
 
-      return res.status(200).json(user);
+      const newUser = await MedicoModel.findOneAndUpdate(
+        { _id: req.params.id },
+        { ...req.body },
+        { new: true, runValidators: true }
+      );
+
+      delete newUser._doc.passwordHash;
+
+      return res.status(200).json(newUser);
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
@@ -143,24 +160,21 @@ AGSRouter.get(
 );
 
 AGSRouter.patch(
-  "/edit/:id",
+  "/editPAC/:id",
   isAuth,
   attachCurrentUser,
   isAGS,
   async (req, res) => {
     try {
-      let Model;
-      if (req.body.role === "MED") Model = MedicoModel;
-      if (req.body.role === "PAC") Model = PacienteModel;
       delete req.body._id;
-      const oldUser = await Model.findOne(
+      const oldUser = await PacienteModel.findOne(
         { _id: req.params.id },
         { passwordHash: 0 },
         { createdBy: 0 },
         { consultas: 0 }
       );
 
-      const newUser = await Model.findOneAndUpdate(
+      const newUser = await PacienteModel.findOneAndUpdate(
         { _id: req.params.id },
         { ...req.body },
         { new: true, runValidators: true }
@@ -177,17 +191,32 @@ AGSRouter.patch(
 );
 
 AGSRouter.delete(
-  "/delete/:id",
+  "/deleteMED/:id",
   isAuth,
   attachCurrentUser,
   isAGS,
   async (req, res) => {
     try {
-      let Model;
-      if (req.body.role === "MED") Model = MedicoModel;
-      if (req.body.role === "PAC") Model = PacienteModel;
+      const deletedUser = await MedicoModel.deleteOne({
+        _id: req.params.id,
+      });
 
-      const deletedUser = await Model.deleteOne({
+      return res.status(200).json(deletedUser);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  }
+);
+
+AGSRouter.delete(
+  "/deletePAC/:id",
+  isAuth,
+  attachCurrentUser,
+  isAGS,
+  async (req, res) => {
+    try {
+      const deletedUser = await PacienteModel.deleteOne({
         _id: req.params.id,
       });
 

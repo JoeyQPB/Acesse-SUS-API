@@ -56,7 +56,27 @@ MEDrouter.get(
         { passwordHash: 0 }
       );
 
-      return res.status(200).json(paciente.consulta);
+      return res.status(200).json(paciente);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  }
+);
+
+MEDrouter.get(
+  "/info_paciente_id/:id",
+  isAuth,
+  attachCurrentUser,
+  isMED,
+  async (req, res) => {
+    try {
+      const paciente = await PacienteModel.findOne(
+        { consulta: req.params.id },
+        { passwordHash: 0 }
+      ).populate("consulta");
+
+      return res.status(200).json(paciente);
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
