@@ -131,7 +131,6 @@ rootRouter.get(
         { _id: req.params.id },
         { passwordHash: 0 }
       );
-      console.log("aq");
 
       return res.status(200).json(AGS);
     } catch (err) {

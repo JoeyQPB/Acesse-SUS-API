@@ -154,6 +154,27 @@ AGSRouter.get("/allmed", isAuth, attachCurrentUser, isAGS, async (req, res) => {
   }
 });
 
+AGSRouter.get(
+  "/getmed/:id",
+  isAuth,
+  attachCurrentUser,
+  isAGS,
+  async (req, res) => {
+    try {
+      const med = await MedicoModel.findOne(
+        { _id: req.params.id },
+        { passwordHash: 0 }
+      );
+
+      console.log(med);
+      return res.status(200).json(med);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  }
+);
+
 AGSRouter.get("/allpac", isAuth, attachCurrentUser, isAGS, async (req, res) => {
   try {
     const all = await PacienteModel.find({}, { passwordHash: 0 });
@@ -163,6 +184,25 @@ AGSRouter.get("/allpac", isAuth, attachCurrentUser, isAGS, async (req, res) => {
     return res.status(500).json(err);
   }
 });
+
+AGSRouter.get(
+  "/getpac/:id",
+  isAuth,
+  attachCurrentUser,
+  isAGS,
+  async (req, res) => {
+    try {
+      const pac = await PacienteModel.findOne(
+        { _id: req.params.id },
+        { passwordHash: 0 }
+      );
+      return res.status(200).json(pac);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  }
+);
 
 AGSRouter.patch(
   "/editMED/:id",
@@ -174,9 +214,7 @@ AGSRouter.patch(
       delete req.body._id;
       const oldUser = await MedicoModel.findOne(
         { _id: req.params.id },
-        { passwordHash: 0 },
-        { createdBy: 0 },
-        { consultas: 0 }
+        { passwordHash: 0, consultas: 0, createdBy: 0 }
       );
 
       const newUser = await MedicoModel.findOneAndUpdate(
@@ -184,8 +222,6 @@ AGSRouter.patch(
         { ...req.body },
         { new: true, runValidators: true }
       );
-
-      delete newUser._doc.passwordHash;
 
       return res.status(200).json(newUser);
     } catch (err) {
@@ -205,9 +241,7 @@ AGSRouter.patch(
       delete req.body._id;
       const oldUser = await PacienteModel.findOne(
         { _id: req.params.id },
-        { passwordHash: 0 },
-        { createdBy: 0 },
-        { consultas: 0 }
+        { passwordHash: 0, createdBy: 0, consultas: 0 }
       );
 
       const newUser = await PacienteModel.findOneAndUpdate(
@@ -215,8 +249,6 @@ AGSRouter.patch(
         { ...req.body },
         { new: true, runValidators: true }
       );
-
-      delete newUser._doc.passwordHash;
 
       return res.status(200).json(newUser);
     } catch (err) {
