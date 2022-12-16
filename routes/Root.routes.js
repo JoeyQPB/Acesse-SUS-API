@@ -120,6 +120,27 @@ rootRouter.get(
   }
 );
 
+rootRouter.get(
+  "/get-AGS/:id",
+  isAuth,
+  attachCurrentUser,
+  isROOT,
+  async (req, res) => {
+    try {
+      const AGS = await AgenteDeSaudeModel.findOne(
+        { _id: req.params.id },
+        { passwordHash: 0 }
+      );
+      console.log("aq");
+
+      return res.status(200).json(AGS);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  }
+);
+
 rootRouter.patch(
   "/editar_AGS/:id",
   isAuth,
