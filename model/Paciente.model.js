@@ -21,10 +21,12 @@ const pacienteSchema = new Schema({
   cpf: {
     type: String,
     required: true,
+    unique: true,
   },
   rg: {
     type: String,
     required: true,
+    unique: true,
   },
   posto: {
     type: String,
@@ -75,7 +77,7 @@ const pacienteSchema = new Schema({
     uppercase: true,
   },
   tel: {
-    type: Number,
+    type: String,
     trim: true,
     required: true,
   },

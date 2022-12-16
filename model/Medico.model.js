@@ -21,10 +21,12 @@ const medicoSchema = new Schema({
   cpf: {
     type: String,
     required: true,
+    unique: true,
   },
   rg: {
     type: String,
     required: true,
+    unique: true,
   },
   posto: {
     type: String,
@@ -39,6 +41,7 @@ const medicoSchema = new Schema({
   CRM: {
     type: String,
     required: true,
+    unique: true,
   },
   UF: {
     type: String,
