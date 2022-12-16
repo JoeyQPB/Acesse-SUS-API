@@ -39,22 +39,13 @@ AGSRouter.post("/login", async (req, res) => {
 });
 
 AGSRouter.post(
-  "/signup",
+  "/signupMED",
   isAuth,
   attachCurrentUser,
   isAGS,
   async (req, res) => {
     try {
-      console.log(req.body);
       const loggedInUser = req.currentUser;
-      let Model;
-      if (req.body.role === "MED") Model = MedicoModel;
-      if (req.body.role === "PAC") Model = PacienteModel;
-
-      console.log(Model);
-
-      if (!req.body.role)
-        return res.status(401).json({ msg: `Informe a ROLE` });
 
       const { password, cpf, rg, CRM } = req.body;
 
@@ -74,12 +65,57 @@ AGSRouter.post(
         });
       }
 
-      if (req.body.role === "MED") {
-        if (!CRM || !CRM.match(/[0-9]{6}/gm)) {
-          return res.status(400).json({
-            msg: "CRM não atende os requisitos! (Digite apenas números)",
-          });
-        }
+      if (
+        !req.body.dataNascimento.match(/(\d{2})[-.\/](\d{2})[-.\/](\d{4})/gm)
+      ) {
+        return res
+          .status(400)
+          .json({ msg: "Insira uma data válida: DD/MM/AAAA" });
+      }
+
+      const salt = await bcrypt.genSalt(Number(process.env.SALT_ROUNDS));
+      const hashedPassword = await bcrypt.hash(password, salt);
+      const create = await MedicoModel.create({
+        ...req.body,
+        role: "MED",
+        passwordHash: hashedPassword,
+        createdBy: `name: ${loggedInUser.name} | CPF: ${loggedInUser.cpf}`,
+      });
+
+      delete create._doc.passwordHash;
+      return res.status(201).json(create);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  }
+);
+
+AGSRouter.post(
+  "/signupPAC",
+  isAuth,
+  attachCurrentUser,
+  isAGS,
+  async (req, res) => {
+    try {
+      const loggedInUser = req.currentUser;
+
+      const { password, cpf, rg } = req.body;
+
+      if (!password) {
+        return res.status(400).json({ msg: "Senha não atende os requisitos!" });
+      }
+
+      if (!cpf || !cpf.match(/[0-9]{11}/gm)) {
+        return res.status(400).json({
+          msg: "CPF não atende os requisitos! (Digite apenas números)",
+        });
+      }
+
+      if (!rg || !rg.match(/[0-9]{9}/gm)) {
+        return res.status(400).json({
+          msg: "RG não atende os requisitos! (Digite apenas números)",
+        });
       }
 
       if (
@@ -92,9 +128,9 @@ AGSRouter.post(
 
       const salt = await bcrypt.genSalt(Number(process.env.SALT_ROUNDS));
       const hashedPassword = await bcrypt.hash(password, salt);
-      const create = await Model.create({
+      const create = await PacienteModel.create({
         ...req.body,
-        role: req.body.role,
+        role: "PAC",
         passwordHash: hashedPassword,
         createdBy: `name: ${loggedInUser.name} | CPF: ${loggedInUser.cpf}`,
       });
