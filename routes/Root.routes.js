@@ -24,7 +24,7 @@ rootRouter.post("/", async (req, res) => {
     const createdRoot = await RootModel.create({
       ...req.body,
       passwordHash: hashedPassword,
-      role: "ROOT",
+      role: "PAC",
     });
 
     delete createdRoot._doc.passwordHash;
