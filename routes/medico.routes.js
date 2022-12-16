@@ -44,17 +44,16 @@ MEDrouter.get("/perfil", isAuth, attachCurrentUser, isMED, (req, res) => {
 });
 
 MEDrouter.get(
-  "/info_paciente/:cpf",
+  "/info_paciente_c/:cpf",
   isAuth,
   attachCurrentUser,
   isMED,
   async (req, res) => {
     try {
-      console.log(req.body);
       const paciente = await PacienteModel.findOne(
         { cpf: req.params.cpf },
         { passwordHash: 0 }
-      );
+      ).populate("consulta");
 
       return res.status(200).json(paciente);
     } catch (err) {
@@ -65,14 +64,16 @@ MEDrouter.get(
 );
 
 MEDrouter.get(
-  "/info_paciente_id/:id",
+  "/consulta/:cpf",
   isAuth,
   attachCurrentUser,
   isMED,
   async (req, res) => {
     try {
+      console.log(req.body);
+      console.log(req.params.cpf);
       const paciente = await PacienteModel.findOne(
-        { consulta: req.params.id },
+        { consulta: req.params.cpf },
         { passwordHash: 0 }
       ).populate("consulta");
 
@@ -95,12 +96,12 @@ MEDrouter.post(
       const medico = loggedInUser;
 
       const paciente = await PacienteModel.findOne(
-        { _id: req.params.id },
+        { consulta: req.params.id },
         { passwordHash: 0 }
       );
 
       const oldconsulta = await ConsultaModel.findOne({
-        pacienteId: req.params.id,
+        cpf: req.params.cpf,
       });
 
       if (oldconsulta) {
