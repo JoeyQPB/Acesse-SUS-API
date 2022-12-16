@@ -6,7 +6,6 @@ import { RootModel } from "../model/root.model.js";
 export default async function AttachCurrentUser(req, res, next) {
   try {
     const userData = req.auth;
-    console.log(req.auth);
 
     if (userData.role === "AGS") {
       const user = await AgenteDeSaudeModel.findOne(
@@ -17,8 +16,6 @@ export default async function AttachCurrentUser(req, res, next) {
       if (!user) {
         return res.status(404).json({ msg: "Agente de Saude não encontrado" });
       }
-
-      console.log(user);
 
       req.currentUser = user;
       next();
