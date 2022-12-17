@@ -5,9 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node .",
-    "dev": "nodemon ."
+    "test": "mocha tests/unit/",
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
