@@ -36,6 +36,6 @@ app.use(`/API/${API_VERSION}/MED`, MEDrouter);
 
 app.use(`/API/${API_VERSION}/upload_img`, uploadImgRouter);
 
-app.listen(Number(process.env.DOOR), () => {
-  console.log(`Server up and running at DOOR: ${process.env.DOOR}`);
+app.listen(Number(process.env.PORT), () => {
+  console.log(`Server up and running at DOOR: ${process.env.PORT}`);
 });
