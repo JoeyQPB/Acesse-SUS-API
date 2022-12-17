@@ -11,29 +11,29 @@ import { AgenteDeSaudeModel } from "../model/AgenteDeSaude.model.js";
 const rootRouter = express.Router();
 dotenv.config();
 
-rootRouter.post("/", async (req, res) => {
-  try {
-    const { password } = req.body;
+// rootRouter.post("/", async (req, res) => {
+//   try {
+//     const { password } = req.body;
 
-    if (!password) {
-      return res.status(400).json({ msg: "Senha não atende os requisitos!" });
-    }
+//     if (!password) {
+//       return res.status(400).json({ msg: "Senha não atende os requisitos!" });
+//     }
 
-    const salt = await bcrypt.genSalt(Number(process.env.SALT_ROUNDS));
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const createdRoot = await RootModel.create({
-      ...req.body,
-      passwordHash: hashedPassword,
-      role: "ROOT",
-    });
+//     const salt = await bcrypt.genSalt(Number(process.env.SALT_ROUNDS));
+//     const hashedPassword = await bcrypt.hash(password, salt);
+//     const createdRoot = await RootModel.create({
+//       ...req.body,
+//       passwordHash: hashedPassword,
+//       role: "ROOT",
+//     });
 
-    delete createdRoot._doc.passwordHash;
-    return res.status(201).json(createdRoot);
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json(err);
-  }
-});
+//     delete createdRoot._doc.passwordHash;
+//     return res.status(201).json(createdRoot);
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(500).json(err);
+//   }
+// });
 
 rootRouter.post("/login", async (req, res) => {
   try {
