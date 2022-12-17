@@ -13,6 +13,7 @@ dotenv.config();
 
 rootRouter.post("/", async (req, res) => {
   try {
+    // aq
     const { password } = req.body;
 
     if (!password) {
