@@ -2,7 +2,7 @@ import express from "express";
 import * as dotenv from "dotenv";
 import { DBconnect } from "./config/db.config.js";
 
-// import { rootRouter } from "./routes/root.routes.js";
+import { rootRouter } from "./routes/root.routes.js";
 import { AGSRouter } from "./routes/AGS.routes.js";
 import { PACRouter } from "./routes/Pacientes.routes.js";
 import { MEDrouter } from "./routes/medico.routes.js";
