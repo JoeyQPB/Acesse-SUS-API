@@ -18,6 +18,13 @@ recSenhaRouter.post("/esqueci_senha", async (req, res, next) => {
   try {
     const { email } = req.body;
 
+    if (
+      !(await AgenteDeSaudeModel.findOne({ email: email })) ||
+      !(await MedicoModel.findOne({ email: email })) ||
+      !(await PacienteModel.findOne({ email: email }))
+    )
+      return res.status(400).json({ msg: "Email não encontrado" });
+
     const token = crypto.randomBytes(12).toString("hex");
 
     const salt = await bcrypt.genSalt(Number(process.env.SALT_ROUNDS));
