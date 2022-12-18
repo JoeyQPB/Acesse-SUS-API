@@ -11,6 +11,7 @@ import { uploadImgRouter } from "./routes/uplouadImage.routes.js";
 
 import { recSenhaRouter } from "./routes/recSenha.routes.js";
 
+// configurar
 import cors from "cors";
 
 dotenv.config();
