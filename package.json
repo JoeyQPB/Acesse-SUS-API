@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "mocha tests/unit/",
-    "start": "node ."
+    "start": "node .",
+    "dev": "nodemon ."
   },
   "repository": {
     "type": "git",
