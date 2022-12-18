@@ -6,7 +6,6 @@
   "type": "module",
   "scripts": {
     "test": "mocha tests/unit/",
-    "dev": "nodemon .",
     "start": "node ."
   },
   "repository": {
