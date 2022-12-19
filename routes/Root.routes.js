@@ -8,12 +8,11 @@ import attachCurrentUser from "../middlewares/attachCurrentUser.js";
 import { isROOT } from "../middlewares/isROOT.js";
 import { AgenteDeSaudeModel } from "../model/AgenteDeSaude.model.js";
 
-const rootRouter = express.Router();
+const RootRouter = express.Router();
 dotenv.config();
 
-rootRouter.post("/", async (req, res) => {
+RootRouter.post("/", async (req, res) => {
   try {
-    // aq
     const { password } = req.body;
 
     if (!password) {
@@ -36,7 +35,7 @@ rootRouter.post("/", async (req, res) => {
   }
 });
 
-rootRouter.post("/login", async (req, res) => {
+RootRouter.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const root = await RootModel.findOne({ email: email });
@@ -62,7 +61,7 @@ rootRouter.post("/login", async (req, res) => {
   }
 });
 
-rootRouter.post(
+RootRouter.post(
   "/cadastrar_AGS",
   isAuth,
   attachCurrentUser,
@@ -104,7 +103,7 @@ rootRouter.post(
   }
 );
 
-rootRouter.get(
+RootRouter.get(
   "/all_AGS",
   isAuth,
   attachCurrentUser,
@@ -121,7 +120,7 @@ rootRouter.get(
   }
 );
 
-rootRouter.get(
+RootRouter.get(
   "/get-AGS/:id",
   isAuth,
   attachCurrentUser,
@@ -141,7 +140,7 @@ rootRouter.get(
   }
 );
 
-rootRouter.patch(
+RootRouter.patch(
   "/editar_AGS/:id",
   isAuth,
   attachCurrentUser,
@@ -170,7 +169,7 @@ rootRouter.patch(
   }
 );
 
-rootRouter.delete(
+RootRouter.delete(
   "/delete/:id",
   isAuth,
   attachCurrentUser,
@@ -189,4 +188,4 @@ rootRouter.delete(
   }
 );
 
-export { rootRouter };
+export { RootRouter };
