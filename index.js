@@ -13,13 +13,12 @@ import { recSenhaRouter } from "./routes/recSenha.routes.js";
 
 import { SwaggerRouter } from "./routes/swagger.routes.js";
 
-// configurar
 import cors from "cors";
 
 dotenv.config();
 DBconnect();
 
-const app = express();
+const app = express({ origin: process.env.REACT_APP_URL });
 
 app.use(cors());
 
