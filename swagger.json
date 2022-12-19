@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Acesse SUS API Documantation",
+    "description": "In this documantation you will be able to consult the API end-points and also test all availblw routes. Do not dorfet to register and carry out the authorization.",
+    "contact": {
+      "email": "joey_qpb@hotmail.com"
+    },
+    "version": "1.0"
+  },
+  "serves": [
+    {
+      "url": "http://localhost:8080/Acesse-SUS",
+      "description": "Local Server"
+    }
+  ],
+  "paths": {
+    "/Root": {
+      "post": {
+        "x-swagger-router-controller": "middleware-name1",
+        "operationId": "swagTest",
+        "tags": ["/test"],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/Root/login": {},
+    "/Root/cadastrar_AGS": {},
+    "/Root/all_AGS": {},
+    "/Root/get-AGS/{id}": {},
+    "/Root/editar_AGS/{id}": {},
+    "/Root/delete/{id}": {},
+    "/upload_img": {},
+    "/upload_img/edit": {},
+    "/esqueci_senha": {},
+    "/PAC/login": {},
+    "/PAC/perfil": {},
+    "/MED/login": {},
+    "/MED/perfil": {},
+    "/MED/info_paciente_c/{cpf}": {},
+    "/MED/consulta/{cpf}": {},
+    "/MED/consulta/{id}": {},
+    "/AGS/login": {},
+    "/AGS/signupMED": {},
+    "/AGS/signupPAC": {},
+    "/AGS/allmed": {},
+    "/AGS/getmed/{id}": {},
+    "/AGS/allpac": {},
+    "/AGS/getpac/{id}": {},
+    "/AGS/editMED/{id}": {},
+    "/AGS/editPAC/{id}": {},
+    "/AGS/deleteMED/{id}": {},
+    "/AGS/deletePAC/{id}": {},
+    "/AGS/profile": {}
+  },
+  "components": {}
+}
