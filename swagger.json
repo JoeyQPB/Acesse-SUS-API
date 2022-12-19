@@ -12,6 +12,10 @@
     {
       "url": "http://localhost:8080/Acesse-SUS",
       "description": "Local Server"
+    },
+    {
+      "url": "https://acessesusapi.cyclic.app/doc/",
+      "description": "Deploy from https://app.cyclic.sh/#/"
     }
   ],
   "paths": {

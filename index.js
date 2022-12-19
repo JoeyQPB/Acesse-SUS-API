@@ -18,9 +18,9 @@ import cors from "cors";
 dotenv.config();
 DBconnect();
 
-const app = express({ origin: process.env.REACT_APP_URL });
+const app = express();
 
-app.use(cors());
+app.use(cors({ origin: process.env.REACT_APP_URL }));
 
 app.use(express.json());
 
