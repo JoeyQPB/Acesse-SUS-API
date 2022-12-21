@@ -20,8 +20,8 @@ DBconnect();
 
 const app = express();
 
-// app.use(cors({ origin: process.env.REACT_APP_URL }));
-app.use(cors());
+app.use(cors({ origin: process.env.REACT_APP_URL }));
+// app.use(cors());
 
 app.use(express.json());
 
