@@ -40,8 +40,8 @@ const pacienteSchema = new Schema({
   nomesocial: {
     type: String,
     trim: true,
-    required: true,
     uppercase: true,
+    default: "Não Tem ou Não Informado",
   },
   suscard: {
     type: String,

@@ -32,10 +32,10 @@ const consultaSchema = new Schema({
     required: true,
     trim: true,
     uppercase: true,
+    default: "Sem Observações a serem feitas",
   },
   pacienteId: {
     type: String,
-    ref: "Paciente",
   },
   pacienteNome: {
     type: String,
@@ -52,7 +52,7 @@ const consultaSchema = new Schema({
     type: String,
   },
   medicoId: {
-    type: String,
+    type: Types.ObjectId,
     ref: "Medico",
   },
   updatedAt: [{ type: Date }],

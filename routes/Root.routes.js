@@ -147,7 +147,6 @@ RootRouter.patch(
   isROOT,
   async (req, res) => {
     try {
-      delete req.body._id;
       const oldAGS = await AgenteDeSaudeModel.findOne(
         { _id: req.params.id },
         { passwordHash: 0 }
