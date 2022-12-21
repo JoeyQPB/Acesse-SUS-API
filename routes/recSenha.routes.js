@@ -23,7 +23,7 @@ recSenhaRouter.post("/esqueci_senha", async (req, res, next) => {
       !(await MedicoModel.findOne({ email: email })) ||
       !(await PacienteModel.findOne({ email: email }))
     )
-      return res.status(400).json({ msg: "Email não encontrado" });
+      return res.status(404).json({ msg: "Email não encontrado" });
 
     const token = crypto.randomBytes(12).toString("hex");
 

@@ -6,57 +6,2076 @@
     "contact": {
       "email": "joey_qpb@hotmail.com"
     },
-    "version": "1.0"
+    "version": "1.0.0"
   },
   "serves": [
     {
-      "url": "http://localhost:8080/Acesse-SUS",
+      "url": "http://localhost:8080/API/1.0",
       "description": "Local Server"
     },
     {
       "url": "https://acessesusapi.cyclic.app/doc/",
-      "description": "Deploy from https://app.cyclic.sh/#/"
+      "description": "API de production"
     }
   ],
   "paths": {
-    "/Root": {
+    "/API/1.0/Root": {
       "post": {
-        "x-swagger-router-controller": "middleware-name1",
-        "operationId": "swagTest",
-        "tags": ["/test"],
-        "description": "",
+        "summary": "Create Root",
+        "tags": ["/Root"],
+        "description": "this route is responsible for registering a new root user. As the intention of the API is to leave few users with this power, this route is being protected by changing the role that comes from the request body",
         "parameters": [],
-        "responses": {}
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Root"
+              },
+              "examples": {
+                "root": {
+                  "value": {
+                    "name": "Root User",
+                    "email": "rootname@exemple.com",
+                    "password": "thispassword123",
+                    "role": "ROOT"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Root created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Root"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
       }
     },
-    "/Root/login": {},
-    "/Root/cadastrar_AGS": {},
-    "/Root/all_AGS": {},
-    "/Root/get-AGS/{id}": {},
-    "/Root/editar_AGS/{id}": {},
-    "/Root/delete/{id}": {},
-    "/upload_img": {},
-    "/upload_img/edit": {},
-    "/esqueci_senha": {},
-    "/PAC/login": {},
-    "/PAC/perfil": {},
-    "/MED/login": {},
-    "/MED/perfil": {},
-    "/MED/info_paciente_c/{cpf}": {},
-    "/MED/consulta/{cpf}": {},
-    "/MED/consulta/{id}": {},
-    "/AGS/login": {},
-    "/AGS/signupMED": {},
-    "/AGS/signupPAC": {},
-    "/AGS/allmed": {},
-    "/AGS/getmed/{id}": {},
-    "/AGS/allpac": {},
-    "/AGS/getpac/{id}": {},
-    "/AGS/editMED/{id}": {},
-    "/AGS/editPAC/{id}": {},
-    "/AGS/deleteMED/{id}": {},
-    "/AGS/deletePAC/{id}": {},
-    "/AGS/profile": {}
+    "/API/1.0/Root/login": {
+      "post": {
+        "summary": "Login Root",
+        "tags": ["/Root"],
+        "description": "this route is responsible for loging in a user of type root",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "email": { "type": "string" },
+                "password": { "type": "string" }
+              },
+              "examples": {
+                "root Login": {
+                  "value": {
+                    "email": "rootname@exemple.com",
+                    "password": "thispassword123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootLogin"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/Root/cadastrar_AGS": {
+      "post": {
+        "summary": "Create AGS",
+        "tags": ["/Root"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route can only be accessed by a root user, it will be responsible for creating a health agent",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AGS"
+              },
+              "examples": {
+                "AGS": {
+                  "value": {
+                    "name": "agent name",
+                    "email": "agent email",
+                    "password": "security@password123",
+                    "role": "AGS",
+                    "cpf": "12312312312",
+                    "rg": "1212312312",
+                    "posto": "nome do posto que o agente trabalha",
+                    "foto": "algum arquivo png"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "AGS created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/AGSresp"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/Root/all_AGS": {
+      "get": {
+        "summary": "get all AGS",
+        "tags": ["/Root"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route gives you access to all health agents registered in the database",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AGSresp"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/Root/get-AGS/{id}": {
+      "get": {
+        "summary": "get AGS",
+        "tags": ["/Root"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route gives you access to a specific health agent registered in the database",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "agent id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/AGSresp"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/Root/editar_AGS/{id}": {
+      "patch": {
+        "summary": "edit AGS",
+        "tags": ["/Root"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route allows a root to change the specific health agent data registered in the database",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "agent id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "AGS edited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/AGSresp"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/Root/delete/{id}": {
+      "delete": {
+        "summary": "delete AGS",
+        "tags": ["/Root"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route allows a root to delete the specific health agent data registered in the database",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "agent id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "AGS deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "acknowledged": true,
+                  "deletedCount": 1
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/upload_img": {
+      "post": {
+        "summary": "upload img on cloudinary",
+        "tags": ["/Image"],
+        "description": "this route allows you to be able to upload a PNG image to cloudinary",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "image/png": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Upload Complete",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Upload fail"
+          }
+        }
+      }
+    },
+    "/API/1.0/upload_img/edit": {
+      "post": {
+        "summary": "upload img on cloudinary",
+        "tags": ["/Image"],
+        "description": "this route allows you to be able to upload a PNG image to cloudinary",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "image/png": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Upload Complete",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Upload fail"
+          }
+        }
+      }
+    },
+    "/API/1.0/esqueci_senha": {
+      "post": {
+        "summary": "Forgot Password",
+        "tags": ["/Password"],
+        "description": "this route allows any user, except root, to receive a new one in his email",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "email": {
+                  "type": "string",
+                  "required": true,
+                  "uniqueItems": true
+                },
+                "role": {
+                  "type": "string",
+                  "enum": ["ROOT", "MED", "PAC", "AGS"]
+                }
+              },
+              "examples": {
+                "root": {
+                  "value": {
+                    "email": "agentemail@exemple.com",
+                    "role": "AGS"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Root created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "menssage": { "type": "string" }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "email not found"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/PAC/login": {
+      "post": {
+        "summary": "PAC Root",
+        "tags": ["/Patient"],
+        "description": "this route allows the patient to login",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "email": { "type": "string" },
+                "password": { "type": "string" }
+              },
+              "examples": {
+                "PAC Login": {
+                  "value": {
+                    "email": "patientname@exemple.com",
+                    "password": "thispassword123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PACLogin"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/PAC/perfil": {
+      "get": {
+        "summary": "Patient profile",
+        "tags": ["/Patient"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route allows the patient to have access to their information registered in the database",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/PACperfil"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/MED/login": {
+      "post": {
+        "summary": "Login MED",
+        "tags": ["/Doctor"],
+        "description": "this route is responsible for loging in a user of type MED",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "email": { "type": "string" },
+                "password": { "type": "string" }
+              },
+              "examples": {
+                "MED Login": {
+                  "value": {
+                    "email": "medname@exemple.com",
+                    "password": "thispassword123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MEDLogin"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/MED/consulta/{id}": {
+      "post": {
+        "summary": "create medical consultation",
+        "tags": ["/Doctor"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route allows the doctor to create a new query in the database or update the previous query causing the previous query to be added to the 'history' field of the 'queries' collection",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "consulta id",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Consulta"
+              },
+              "examples": {
+                "consulta": {
+                  "type": "object",
+                  "properties": {
+                    "info": "information from the patient about the consultation",
+                    "diagnostico": "medical diagnostic",
+                    "prognostico": "medical prognosis",
+                    "receita": "prescription",
+                    "obs": "some medical observation"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "medical consultation created or updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Consulta"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/MED/perfil": {
+      "get": {
+        "summary": "Doctor profile",
+        "tags": ["/Doctor"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route allows the doctors to have access to their information registered in the database",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/MEDperfil"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/MED/info_paciente_c/{cpf}": {
+      "get": {
+        "summary": "get patient profile",
+        "tags": ["/Doctor"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route gives doctors access to a specific patient registered in the database by cpf of patient",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cpf",
+            "type": "string",
+            "description": "patient cpf",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/PACperfil"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/AGS/login": {
+      "post": {
+        "summary": "Login AGS",
+        "tags": ["/Health_Agent"],
+        "description": "this route is responsible for loging in a user of type AGS",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "email": { "type": "string" },
+                "password": { "type": "string" }
+              },
+              "examples": {
+                "AGS Login": {
+                  "value": {
+                    "email": "agsname@exemple.com",
+                    "password": "thispassword123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AGSLogin"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/AGS/signupMED": {
+      "post": {
+        "summary": "Create MED",
+        "tags": ["/Health_Agent"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route can only be accessed by a Health_Agent user, it will be responsible for creating a MED",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MED"
+              },
+              "examples": {
+                "MED": {
+                  "value": {
+                    "name": "medico name",
+                    "email": "mediconame@email.com",
+                    "password": "123password!",
+                    "cpf": "12312312312",
+                    "rg": "1212312312",
+                    "posto": "POSTO 1",
+                    "foto": "algum arquivo png",
+                    "CRM": "123456",
+                    "UF": "BA",
+                    "especialidade": "Clínico geral",
+                    "dataNascimento": "12/12/2022"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "MED created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/MEDresp"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/AGS/signupPAC": {
+      "post": {
+        "summary": "Create pac",
+        "tags": ["/Health_Agent"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route can only be accessed by a Health_Agent user, it will be responsible for creating a pac",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PAC"
+              },
+              "examples": {
+                "MED": {
+                  "value": {
+                    "name": "nome do paciente",
+                    "email": "pacientename@email.com",
+                    "password": "password123!",
+                    "cpf": "12312312312",
+                    "rg": "1212312312",
+                    "posto": "POSTO 1",
+                    "foto": "algum arquivo png",
+                    "nomesocial": "nome social do paciente",
+                    "suscard": "numero do cartao do sus",
+                    "nacionalidade": "nacionalidade do paciente",
+                    "dataNascimento": "12/12/2022",
+                    "cor": "cor do paciente",
+                    "sexo": "sexoo do paciente",
+                    "nomeDaMae": "nome da mae do paciente",
+                    "tel": "3232323232",
+                    "pulmaoDoenca": "sim/nao",
+                    "fumante": "sim/nao",
+                    "usaAlcool": "sim/nao",
+                    "usaDrogas": "sim/nao",
+                    "hipertenso": "sim/nao",
+                    "diabetes": "sim/nao",
+                    "avcderrame": "sim/nao",
+                    "infarto": "sim/nao",
+                    "cardioDoenca": "sim/nao",
+                    "problemaRins": "sim/nao"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "PAC created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/PACresp"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/AGS/profile": {
+      "get": {
+        "summary": "Health Agent profile",
+        "tags": ["/Health_Agent"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route allows the ags to have access to their information registered in the database",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/AGSperfil"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/AGS/allmed": {
+      "get": {
+        "summary": "get all meds",
+        "tags": ["/Health_Agent"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route gives you access to all doctors registered in the database",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MEDresp"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/AGS/getmed/{id}": {
+      "get": {
+        "summary": "get MED",
+        "tags": ["/Health_Agent"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route gives you access to a specific doctor registered in the database",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "doctor id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/MEDresp"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/AGS/allpac": {
+      "get": {
+        "summary": "get all pacs",
+        "tags": ["/Health_Agent"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route gives you access to all patient registered in the database",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PACresp"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/AGS/getpac/{id}": {
+      "get": {
+        "summary": "get PAC",
+        "tags": ["/Health_Agent"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route gives you access to a specific patient registered in the database",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "patient id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/PACresp"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/AGS/editMED/{id}": {
+      "patch": {
+        "summary": "edit MED",
+        "tags": ["/Health_Agent"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route allows a ags to change the specific doctor data registered in the database",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "doctor id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "MED edited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/MEDresp"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/AGS/editPAC/{id}": {
+      "patch": {
+        "summary": "edit PAC",
+        "tags": ["/Health_Agent"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route allows a ags to change the specific patient data registered in the database",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "patient id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PAC edited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/PACresp"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/AGS/deleteMED/{id}": {
+      "delete": {
+        "summary": "delete MED",
+        "tags": ["/Health_Agent"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route allows a AGS to delete the specific doctor data registered in the database",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "doctor id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "MED deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "acknowledged": true,
+                  "deletedCount": 1
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    },
+    "/API/1.0/AGS/deletePAC/{id}": {
+      "delete": {
+        "summary": "delete PAC",
+        "tags": ["/Health_Agent"],
+        "security": [{ "bearerAuth": [] }],
+        "description": "this route allows a AGS to delete the specific patient data registered in the database",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "description": "patient id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PAC deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "acknowledged": true,
+                  "deletedCount": 1
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User Unauthorized"
+          },
+          "500": {
+            "description": "API error"
+          }
+        }
+      }
+    }
   },
-  "components": {}
+  "components": {
+    "schemas": {
+      "Root": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "email": {
+            "type": "string",
+            "required": true
+          },
+          "password": {
+            "type": "string",
+            "required": true
+          },
+          "role": {
+            "type": "string",
+            "enum": ["ROOT", "MED", "PAC", "AGS"]
+          }
+        }
+      },
+      "RootLogin": {
+        "type": "object",
+        "properties": {
+          "root": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "email": { "type": "string" },
+              "_id": { "type": "string" },
+              "role": { "type": "string" }
+            }
+          },
+          "token": { "type": "string" }
+        }
+      },
+      "PAC": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "email": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "password": {
+            "type": "string",
+            "required": true
+          },
+          "cpf": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "rg": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "posto": {
+            "type": "string"
+          },
+          "foto": {
+            "type": "file",
+            "default": "https://res.cloudinary.com/dqeehrnvz/image/upload/v1670727739/Acesse%20Sus%20Pasta/default_img_ml07es.png"
+          },
+          "nomesocial": {
+            "type": "string",
+            "default": "Não Tem ou Não Informado"
+          },
+          "suscard": {
+            "type": "string",
+            "required": true
+          },
+          "nacionalidade": {
+            "type": "string",
+            "required": true
+          },
+          "dataNascimento": {
+            "type": "string",
+            "required": true
+          },
+          "cor": {
+            "type": "string",
+            "required": true
+          },
+          "sexo": {
+            "type": "string",
+            "required": true
+          },
+          "nomeDaMae": {
+            "type": "string",
+            "required": true
+          },
+          "tel": {
+            "type": "string",
+            "required": true
+          },
+          "pulmaoDoenca": {
+            "type": "string",
+            "required": true
+          },
+          "fumante": {
+            "type": "string",
+            "required": true
+          },
+          "usaAlcool": {
+            "type": "string",
+            "required": true
+          },
+          "usaDrogas": {
+            "type": "string",
+            "required": true
+          },
+          "hipertenso": {
+            "type": "string",
+            "required": true
+          },
+          "diabetes": {
+            "type": "string",
+            "required": true
+          },
+          "avcderrame": {
+            "type": "string",
+            "required": true
+          },
+          "infarto": {
+            "type": "string",
+            "required": true
+          },
+          "cardioDoenca": {
+            "type": "string",
+            "required": true
+          },
+          "problemaRins": {
+            "type": "string",
+            "required": true
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "updateBy": {
+            "type": "string"
+          },
+          "consulta": {
+            "type": "Types.ObjectId"
+          },
+          "role": { "type": "string" }
+        }
+      },
+      "PACresp": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "email": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "password": {
+            "type": "string",
+            "required": true
+          },
+          "cpf": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "rg": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "posto": {
+            "type": "string"
+          },
+          "foto": {
+            "type": "file",
+            "default": "https://res.cloudinary.com/dqeehrnvz/image/upload/v1670727739/Acesse%20Sus%20Pasta/default_img_ml07es.png"
+          },
+          "nomesocial": {
+            "type": "string",
+            "default": "Não Tem ou Não Informado"
+          },
+          "suscard": {
+            "type": "string",
+            "required": true
+          },
+          "nacionalidade": {
+            "type": "string",
+            "required": true
+          },
+          "dataNascimento": {
+            "type": "string",
+            "required": true
+          },
+          "cor": {
+            "type": "string",
+            "required": true
+          },
+          "sexo": {
+            "type": "string",
+            "required": true
+          },
+          "nomeDaMae": {
+            "type": "string",
+            "required": true
+          },
+          "tel": {
+            "type": "string",
+            "required": true
+          },
+          "pulmaoDoenca": {
+            "type": "string",
+            "required": true
+          },
+          "fumante": {
+            "type": "string",
+            "required": true
+          },
+          "usaAlcool": {
+            "type": "string",
+            "required": true
+          },
+          "usaDrogas": {
+            "type": "string",
+            "required": true
+          },
+          "hipertenso": {
+            "type": "string",
+            "required": true
+          },
+          "diabetes": {
+            "type": "string",
+            "required": true
+          },
+          "avcderrame": {
+            "type": "string",
+            "required": true
+          },
+          "infarto": {
+            "type": "string",
+            "required": true
+          },
+          "cardioDoenca": {
+            "type": "string",
+            "required": true
+          },
+          "problemaRins": {
+            "type": "string",
+            "required": true
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "updateBy": {
+            "type": "string"
+          },
+          "consulta": {
+            "type": "Types.ObjectId"
+          },
+          "role": { "type": "string" }
+        }
+      },
+      "PACperfil": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "email": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "cpf": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "rg": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "posto": {
+            "type": "string"
+          },
+          "foto": {
+            "type": "file",
+            "default": "https://res.cloudinary.com/dqeehrnvz/image/upload/v1670727739/Acesse%20Sus%20Pasta/default_img_ml07es.png"
+          },
+          "nomesocial": {
+            "type": "string",
+            "default": "Não Tem ou Não Informado"
+          },
+          "suscard": {
+            "type": "string",
+            "required": true
+          },
+          "nacionalidade": {
+            "type": "string",
+            "required": true
+          },
+          "dataNascimento": {
+            "type": "string",
+            "required": true
+          },
+          "cor": {
+            "type": "string",
+            "required": true
+          },
+          "sexo": {
+            "type": "string",
+            "required": true
+          },
+          "nomeDaMae": {
+            "type": "string",
+            "required": true
+          },
+          "tel": {
+            "type": "string",
+            "required": true
+          },
+          "pulmaoDoenca": {
+            "type": "string",
+            "required": true
+          },
+          "fumante": {
+            "type": "string",
+            "required": true
+          },
+          "usaAlcool": {
+            "type": "string",
+            "required": true
+          },
+          "usaDrogas": {
+            "type": "string",
+            "required": true
+          },
+          "hipertenso": {
+            "type": "string",
+            "required": true
+          },
+          "diabetes": {
+            "type": "string",
+            "required": true
+          },
+          "avcderrame": {
+            "type": "string",
+            "required": true
+          },
+          "infarto": {
+            "type": "string",
+            "required": true
+          },
+          "cardioDoenca": {
+            "type": "string",
+            "required": true
+          },
+          "problemaRins": {
+            "type": "string",
+            "required": true
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "updateBy": {
+            "type": "string"
+          },
+          "consulta": {
+            "type": "Types.ObjectId"
+          }
+        }
+      },
+      "PACLogin": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "email": { "type": "string" },
+              "_id": { "type": "string" },
+              "role": { "type": "string" }
+            }
+          },
+          "token": { "type": "string" }
+        }
+      },
+      "MED": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "email": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "password": {
+            "type": "string",
+            "required": true
+          },
+          "role": { "type": "string" },
+          "cpf": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "rg": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "posto": {
+            "type": "string"
+          },
+          "foto": {
+            "type": "string",
+            "default": "https://res.cloudinary.com/dqeehrnvz/image/upload/v1670727739/Acesse%20Sus%20Pasta/default_img_ml07es.png"
+          },
+          "CRM": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "UF": {
+            "type": "string",
+            "enum": [
+              "AC",
+              "AL",
+              "AP",
+              "AM",
+              "BA",
+              "CE",
+              "DF",
+              "ES",
+              "GO",
+              "MA",
+              "MT",
+              "MS",
+              "MG",
+              "PA",
+              "PB",
+              "PR",
+              "PE",
+              "PI",
+              "RJ",
+              "RN",
+              "RS",
+              "RO",
+              "RR",
+              "SC",
+              "SP",
+              "SE",
+              "TO",
+              ".."
+            ],
+            "default": ".."
+          },
+          "especialidade": {
+            "type": "string",
+            "required": true
+          },
+          "consultas": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+
+          "createdBy": {
+            "type": "string"
+          },
+          "updateBy": {
+            "type": "string"
+          },
+          "dataNascimento": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "MEDresp": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "email": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "role": { "type": "string" },
+          "cpf": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "rg": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "posto": {
+            "type": "string"
+          },
+          "foto": {
+            "type": "string",
+            "default": "https://res.cloudinary.com/dqeehrnvz/image/upload/v1670727739/Acesse%20Sus%20Pasta/default_img_ml07es.png"
+          },
+          "CRM": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "UF": {
+            "type": "string",
+            "enum": [
+              "AC",
+              "AL",
+              "AP",
+              "AM",
+              "BA",
+              "CE",
+              "DF",
+              "ES",
+              "GO",
+              "MA",
+              "MT",
+              "MS",
+              "MG",
+              "PA",
+              "PB",
+              "PR",
+              "PE",
+              "PI",
+              "RJ",
+              "RN",
+              "RS",
+              "RO",
+              "RR",
+              "SC",
+              "SP",
+              "SE",
+              "TO",
+              ".."
+            ],
+            "default": ".."
+          },
+          "especialidade": {
+            "type": "string",
+            "required": true
+          },
+          "consultas": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+
+          "createdBy": {
+            "type": "string"
+          },
+          "updateBy": {
+            "type": "string"
+          },
+          "dataNascimento": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "MEDLogin": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "email": { "type": "string" },
+              "_id": { "type": "string" },
+              "role": { "type": "string" }
+            }
+          },
+          "token": { "type": "string" }
+        }
+      },
+      "MEDperfil": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "email": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "role": { "type": "string" },
+          "cpf": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "rg": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "posto": {
+            "type": "string"
+          },
+          "foto": {
+            "type": "string",
+            "default": "https://res.cloudinary.com/dqeehrnvz/image/upload/v1670727739/Acesse%20Sus%20Pasta/default_img_ml07es.png"
+          },
+          "CRM": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "UF": {
+            "type": "string",
+            "enum": [
+              "AC",
+              "AL",
+              "AP",
+              "AM",
+              "BA",
+              "CE",
+              "DF",
+              "ES",
+              "GO",
+              "MA",
+              "MT",
+              "MS",
+              "MG",
+              "PA",
+              "PB",
+              "PR",
+              "PE",
+              "PI",
+              "RJ",
+              "RN",
+              "RS",
+              "RO",
+              "RR",
+              "SC",
+              "SP",
+              "SE",
+              "TO",
+              ".."
+            ],
+            "default": ".."
+          },
+          "especialidade": {
+            "type": "string",
+            "required": true
+          },
+          "consultas": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+
+          "createdBy": {
+            "type": "string"
+          },
+          "updateBy": {
+            "type": "string"
+          },
+          "dataNascimento": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "Consulta": {
+        "type": "object",
+        "properties": {
+          "info": {
+            "type": "string",
+            "required": true
+          },
+          "diagnostico": {
+            "type": "string",
+            "required": true,
+            "default": "Indefinido"
+          },
+          "prognostico": {
+            "type": "string",
+            "required": true,
+            "default": "Indefinido"
+          },
+          "receita": {
+            "type": "string",
+            "required": true
+          },
+          "obs": {
+            "type": "string",
+            "required": true,
+            "default": "Sem Observações a serem feitas"
+          },
+          "pacienteId": {
+            "type": "string"
+          },
+          "pacienteNome": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date",
+            "default": "new Date(Date.now())"
+          },
+          "createdBy": {
+            "type": "Types.ObjectId",
+            "ref": "Medico"
+          },
+          "medico": {
+            "type": "string"
+          },
+          "medicoId": {
+            "type": "Types.ObjectId",
+            "ref": "Medico"
+          },
+          "updatedAt": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          "historico": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "info": {
+                  "type": "string",
+                  "required": true
+                },
+                "diagnostico": {
+                  "type": "string",
+                  "required": true,
+                  "default": "Indefinido"
+                },
+                "prognostico": {
+                  "type": "string",
+                  "required": true,
+                  "default": "Indefinido"
+                },
+                "receita": {
+                  "type": "string",
+                  "required": true
+                },
+                "obs": {
+                  "type": "string",
+                  "required": true,
+                  "default": "Sem Observações a serem feitas"
+                },
+                "pacienteId": {
+                  "type": "string"
+                },
+                "pacienteNome": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date",
+                  "default": "new Date(Date.now())"
+                },
+                "createdBy": {
+                  "type": "Types.ObjectId",
+                  "ref": "Medico"
+                },
+                "medico": {
+                  "type": "string"
+                },
+                "medicoId": {
+                  "type": "Types.ObjectId",
+                  "ref": "Medico"
+                },
+                "updatedAt": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "AGS": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "email": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "password": {
+            "type": "string",
+            "required": true
+          },
+          "role": {
+            "type": "string",
+            "enum": ["MED", "PAC", "AGS"]
+          },
+          "cpf": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "rg": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "posto": {
+            "type": "string",
+            "required": true
+          },
+          "foto": {
+            "type": "string",
+            "default": "https://res.cloudinary.com/dqeehrnvz/image/upload/v1670727739/Acesse%20Sus%20Pasta/default_img_ml07es.png"
+          }
+        }
+      },
+      "AGSperfil": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "email": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "role": {
+            "type": "string",
+            "enum": ["MED", "PAC", "AGS"]
+          },
+          "cpf": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "rg": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "posto": {
+            "type": "string",
+            "required": true
+          },
+          "foto": {
+            "type": "string",
+            "default": "https://res.cloudinary.com/dqeehrnvz/image/upload/v1670727739/Acesse%20Sus%20Pasta/default_img_ml07es.png"
+          }
+        }
+      },
+      "AGSresp": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "email": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "role": {
+            "type": "string",
+            "enum": ["MED", "PAC", "AGS"]
+          },
+          "cpf": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "rg": {
+            "type": "string",
+            "required": true,
+            "uniqueItems": true
+          },
+          "posto": {
+            "type": "string",
+            "required": true
+          },
+          "foto": {
+            "type": "string",
+            "default": "https://res.cloudinary.com/dqeehrnvz/image/upload/v1670727739/Acesse%20Sus%20Pasta/default_img_ml07es.png"
+          }
+        }
+      },
+      "AGSLogin": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "email": { "type": "string" },
+              "_id": { "type": "string" },
+              "role": { "type": "string" }
+            }
+          },
+          "token": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
 }

@@ -30,7 +30,6 @@ const medicoSchema = new Schema({
   },
   posto: {
     type: String,
-    ref: "Posto",
     uppercase: true,
   },
   foto: {
